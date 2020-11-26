@@ -1,8 +1,10 @@
 from flask import Flask, request, render_template, jsonify
 import requests 
 import json
-# from bs4 import BeautifulSoup
+import os
+
 from selenium import webdriver
+
 from selenium.webdriver.common.keys import Keys
 from product import Product
 from utils import convert_price_toNumber
@@ -38,11 +40,14 @@ def foo():
     best_deal_product = Product("", "", "", "")
     search_terms = search_term.split(" ")
 
-    options = get_web_driver_options()
-    set_automation_as_head_less(options)
-    set_ignore_certificate_error(options)
-    set_browser_as_incognito(options)
-    driver = get_chrome_web_driver(options)
+    options = webdriver.ChromeOptions()
+    options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+    options.add_argument("--headless")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--no-sandbox")
+    options.add_argument('--ignore-certificate-errors')
+    options.add_argument('--incognito')
+    driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), options=options)
 
     driver.get(URL)
     element = driver.find_element_by_xpath('//*[@id="twotabsearchtextbox"]')
@@ -117,9 +122,11 @@ def foo():
     print(json.dumps(chepest_product.serialize(), indent=4, sort_keys=True))
     print(json.dumps(best_deal_product.serialize(), indent=4, sort_keys=True))
 
-    options = get_web_driver_options()
-    set_ignore_certificate_error(options)
-    driver = get_chrome_web_driver(options)
+    options = webdriver.ChromeOptions()
+    options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+    options.add_argument('--ignore-certificate-errors')
+    driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), options=options)
+
     driver.get(best_deal_product.link)
     driver.find_element_by_tag_name('body').send_keys(Keys.COMMAND + 't')
 
