@@ -1,10 +1,10 @@
 import requests 
 import json
-from bs4 import BeautifulSoup
+# from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from product import Product
-from utils import convert_price_toNumber
+from utils import convert_price_toNumberwatch
 from web_driver_conf import get_web_driver_options
 from web_driver_conf import get_chrome_web_driver
 from web_driver_conf import set_ignore_certificate_error
@@ -15,7 +15,6 @@ URL = "http://www.amazon.com/"
 NUMBER_OF_PAGES_TO_SEARCH = 5
 QUESTION_PRODUCT = "What are you looking for?\n:"
 search_term = str(input(QUESTION_PRODUCT))
-
 biggest_discount = 0.0
 lowest_price = 0.0
 chepest_product = Product("", "", "", "")
@@ -32,9 +31,7 @@ driver.get(URL)
 element = driver.find_element_by_xpath('//*[@id="twotabsearchtextbox"]')
 element.send_keys(search_term)
 element.send_keys(Keys.ENTER)
-
 products = []
-
 page = NUMBER_OF_PAGES_TO_SEARCH
 
 while True:
@@ -44,9 +41,9 @@ while True:
         except:
             break
 
-    for i in driver.find_elements_by_xpath('//*[@id="search"]/div[1]/div[2]/div/span[4]/div[1]'):
+    for i in driver.find_elements_by_xpath('//*[@id="search"]/div[1]/div[2]/div/span[3]/div[2]'):
         counter = 0
-        for element in i.find_elements_by_xpath('//div/div/div[2]/div[2]/div/div[2]/div[1]/div/div[1]/div/div/a'):
+        for element in i.find_elements_by_xpath('//div/span/div/div/div/div'):
             should_add = True
             name = ""
             price = ""
@@ -67,12 +64,12 @@ while True:
             product = Product(name, price, prev_price, link)
             if should_add:
                 products.append(product)
+                print(products)
             counter = counter + 1
     page = page - 1
     if page == 0:
         break
     print(page)
-
 run = 0
 
 for product in products:
@@ -99,10 +96,8 @@ with open('products.json', 'w') as json_file:
     for prod in products:
         data["Products"].append(prod.serialize())
     json.dump(data, json_file, sort_keys=True, indent=4)
-
 print(json.dumps(chepest_product.serialize(), indent=4, sort_keys=True))
 print(json.dumps(best_deal_product.serialize(), indent=4, sort_keys=True))
-
 options = get_web_driver_options()
 set_ignore_certificate_error(options)
 driver = get_chrome_web_driver(options)
