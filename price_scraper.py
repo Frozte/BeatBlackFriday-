@@ -4,7 +4,7 @@ import json
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from product import Product
-from utils import convert_price_toNumberwatch
+from utils import convert_price_toNumber
 from web_driver_conf import get_web_driver_options
 from web_driver_conf import get_chrome_web_driver
 from web_driver_conf import set_ignore_certificate_error
@@ -15,6 +15,7 @@ URL = "http://www.amazon.com/"
 NUMBER_OF_PAGES_TO_SEARCH = 5
 QUESTION_PRODUCT = "What are you looking for?\n:"
 search_term = str(input(QUESTION_PRODUCT))
+
 biggest_discount = 0.0
 lowest_price = 0.0
 chepest_product = Product("", "", "", "")
@@ -96,8 +97,10 @@ with open('products.json', 'w') as json_file:
     for prod in products:
         data["Products"].append(prod.serialize())
     json.dump(data, json_file, sort_keys=True, indent=4)
+
 print(json.dumps(chepest_product.serialize(), indent=4, sort_keys=True))
 print(json.dumps(best_deal_product.serialize(), indent=4, sort_keys=True))
+
 options = get_web_driver_options()
 set_ignore_certificate_error(options)
 driver = get_chrome_web_driver(options)
