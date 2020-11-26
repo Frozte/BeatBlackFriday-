@@ -1,3 +1,4 @@
+from flask import Flask, request, render_template, jsonify
 import requests 
 import json
 # from bs4 import BeautifulSoup
@@ -11,11 +12,25 @@ from web_driver_conf import set_ignore_certificate_error
 from web_driver_conf import set_browser_as_incognito
 from web_driver_conf import set_automation_as_head_less
 
+#from price_scraper import FUNCTION NAME
 
+app = Flask(__name__)
+
+app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/get-text', methods=['GET', 'POST'])
+def foo():
+
+    bar = request.form['test']
+    
     URL = "http://www.amazon.com/"
     NUMBER_OF_PAGES_TO_SEARCH = 5
     QUESTION_PRODUCT = "What are you looking for?\n:"
-    search_term = str(input(QUESTION_PRODUCT)) #PASS USER INPUT FROM HTML TO HERE
+    search_term = str(bar) #PASS USER INPUT FROM HTML TO HERE
 
     biggest_discount = 0.0
     lowest_price = 0.0
@@ -107,3 +122,8 @@ from web_driver_conf import set_automation_as_head_less
     driver = get_chrome_web_driver(options)
     driver.get(best_deal_product.link)
     driver.find_element_by_tag_name('body').send_keys(Keys.COMMAND + 't')
+
+    return jsonify(data)
+
+if __name__ == '__main__':
+    app.run()
