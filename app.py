@@ -2,6 +2,7 @@ from flask import Flask, request, render_template, jsonify
 import requests 
 import json
 import os
+import time
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from product import Product
@@ -47,6 +48,8 @@ def foo():
     driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), options=options)
     #driver = webdriver.Chrome("chromedriver.exe", options=options) ##UNCOMMENT FOR TESTING
     #####################################
+
+    time.sleep(10)
 
     driver.get(URL)
     element = driver.find_element_by_xpath('//*[@id="twotabsearchtextbox"]')
