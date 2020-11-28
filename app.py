@@ -49,9 +49,9 @@ def foo():
     #driver = webdriver.Chrome("chromedriver.exe", options=options) ##UNCOMMENT FOR TESTING
     #####################################
 
-    time.sleep(10)
-
     driver.get(URL)
+    
+    time.sleep(10)
     element = driver.find_element_by_xpath('//*[@id="twotabsearchtextbox"]')
     element.send_keys(search_term)
     element.send_keys(Keys.ENTER)
