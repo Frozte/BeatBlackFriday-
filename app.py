@@ -3,14 +3,9 @@ import requests
 import json
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.chrome.options import Options
+#from selenium.webdriver.chrome.options import Options
 from product import Product
 from utils import convert_price_toNumber
-from web_driver_conf import get_web_driver_options
-from web_driver_conf import get_chrome_web_driver
-from web_driver_conf import set_ignore_certificate_error
-from web_driver_conf import set_browser_as_incognito
-from web_driver_conf import set_automation_as_head_less
 
 #from price_scraper import FUNCTION NAME
 
@@ -24,6 +19,9 @@ def index():
 
 @app.route('/get-text', methods=['GET', 'POST'])
 def foo():
+
+    # GOOGLE_CHROME_BIN = '/app/.apt/usr/bin/google_chrome'
+    # CHROMEDRIVER_PATH = '/app/.chromedriver/bin/chromedriver'
 
     bar = request.form['test']
     
@@ -39,11 +37,13 @@ def foo():
     best_deal_product = Product("", "", "", "", "", "")
     search_terms = search_term.split(" ")
 
-    options = get_web_driver_options()
-    set_automation_as_head_less(options)
-    set_ignore_certificate_error(options)
-    set_browser_as_incognito(options)
-    driver = get_chrome_web_driver(options)
+    #####################################
+    options = webdriver.ChromeOptions()
+    options.add_argument('--headless')
+    options.add_argument('--ignore-certificate-errors')
+    options.add_argument('--incognito')
+    driver = webdriver.Chrome("chromedriver.exe", options=options)
+    #####################################
 
     driver.get(URL)
     element = driver.find_element_by_xpath('//*[@id="twotabsearchtextbox"]')
@@ -131,9 +131,12 @@ def foo():
     print(json.dumps(chepest_product.serialize(), indent=4, sort_keys=True))
     print(json.dumps(best_deal_product.serialize(), indent=4, sort_keys=True))
 
-    options = get_web_driver_options()
-    set_ignore_certificate_error(options)
-    driver = get_chrome_web_driver(options)
+    ##############################
+    options = webdriver.ChromeOptions()
+    options.add_argument('--ignore-certificate-errors')
+    driver = webdriver.Chrome("chromedriver.exe", options=options)
+    ##############################
+
     driver.get(best_deal_product.link)
     driver.find_element_by_tag_name('body').send_keys(Keys.COMMAND + 't')
 
