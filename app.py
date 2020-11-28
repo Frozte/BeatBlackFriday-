@@ -3,15 +3,9 @@ import requests
 import json
 import os
 from selenium import webdriver
-
 from selenium.webdriver.common.keys import Keys
 from product import Product
 from utils import convert_price_toNumber
-from web_driver_conf import get_web_driver_options
-from web_driver_conf import get_chrome_web_driver
-from web_driver_conf import set_ignore_certificate_error
-from web_driver_conf import set_browser_as_incognito
-from web_driver_conf import set_automation_as_head_less
 
 app = Flask(__name__)
 
