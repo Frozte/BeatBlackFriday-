@@ -23,7 +23,7 @@ def foo():
     URL = "http://www.amazon.com/"
     NUMBER_OF_PAGES_TO_SEARCH = 1
     QUESTION_PRODUCT = "What are you looking for?\n:"
-    PRODUCT_PATH = '//*[@id="search"]/div[1]/div[2]/div/span[3]/div[2]/div'
+    PRODUCT_PATH = '//*[@id="\search\"]/div[1]/div[2]/div/span[3]/div[2]/div'
     search_term = str(bar)
 
     biggest_discount = 0.0
@@ -49,7 +49,7 @@ def foo():
     #####################################
 
     driver.get(URL)
-    element = driver.find_element_by_xpath('//*[@id="twotabsearchtextbox"]')
+    element = driver.find_element_by_xpath('//*[@id=\"twotabsearchtextbox"\]')
     element.send_keys(search_term)
     element.send_keys(Keys.ENTER)
 
