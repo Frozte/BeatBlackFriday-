@@ -2,10 +2,6 @@ from flask import Flask, request, render_template, jsonify
 import requests 
 import json
 import os
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 from selenium import webdriver
 
 from selenium.webdriver.common.keys import Keys
@@ -41,16 +37,6 @@ def foo():
     best_deal_product = Product("", "", "", "")
     search_terms = search_term.split(" ")
 
-<<<<<<< Updated upstream
-    options = webdriver.ChromeOptions()
-    options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
-    options.add_argument("--headless")
-    options.add_argument("--disable-dev-shm-usage")
-    options.add_argument("--no-sandbox")
-    options.add_argument('--ignore-certificate-errors')
-    options.add_argument('--incognito')
-    driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), options=options)
-=======
     # GOOGLE_CHROME_BIN = '/app/.apt/usr/bin/google_chrome' #PATH SET ON HEROKU CONFIG_VARS
     # CHROMEDRIVER_PATH = '/app/.chromedriver/bin/chromedriver' #PATH SET ON HEROKU CONFIG_VARS
 
@@ -65,7 +51,6 @@ def foo():
     driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), options=options)
     #driver = webdriver.Chrome("chromedriver.exe", options=options) ##UNCOMMENT FOR TESTING
     #####################################
->>>>>>> Stashed changes
 
     driver.get(URL)
     element = driver.find_element_by_xpath('//*[@id="twotabsearchtextbox"]')
@@ -142,10 +127,6 @@ def foo():
 
     options = webdriver.ChromeOptions()
     options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
-<<<<<<< Updated upstream
-    options.add_argument('--ignore-certificate-errors')
-    driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), options=options)
-=======
     ##############################
     #options.add_argument('--headless')
     #options.add_argument("--disable-dev-shm-usage")
@@ -155,7 +136,6 @@ def foo():
     driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), options=options)
     #driver = webdriver.Chrome("chromedriver.exe", options=options)
     ##############################
->>>>>>> Stashed changes
 
     driver.get(best_deal_product.link)
     driver.find_element_by_tag_name('body').send_keys(Keys.COMMAND + 't')
