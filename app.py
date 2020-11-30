@@ -1,13 +1,10 @@
 from flask import Flask, request, render_template, jsonify
-import requests 
 import json
+import time
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-#from selenium.webdriver.chrome.options import Options
 from product import Product
 from utils import convert_price_toNumber
-
-#from price_scraper import FUNCTION NAME
 
 app = Flask(__name__)
 
@@ -20,13 +17,17 @@ def index():
 @app.route('/get-text', methods=['GET', 'POST'])
 def foo():
 
+    print("")
+    print("#####################################")
+    start_time = time.time()
+    
     # GOOGLE_CHROME_BIN = '/app/.apt/usr/bin/google_chrome'
     # CHROMEDRIVER_PATH = '/app/.chromedriver/bin/chromedriver'
 
     bar = request.form['test']
     
     URL = "http://www.amazon.com/"
-    NUMBER_OF_PAGES_TO_SEARCH = 1
+    NUMBER_OF_PAGES_TO_SEARCH = 4
     QUESTION_PRODUCT = "What are you looking for?\n:"
     PRODUCT_PATH = '//*[@id="search"]/div[1]/div[2]/div/span[3]/div[2]/div'
     search_term = str(bar)
@@ -37,6 +38,10 @@ def foo():
     best_deal_product = Product("", "", "", "", "", "")
     search_terms = search_term.split(" ")
 
+    print("")
+    print("--- DRIVER STARTED ---")
+    print("--- %s seconds ---" % (time.time() - start_time))
+
     #####################################
     options = webdriver.ChromeOptions()
     options.add_argument('--headless')
@@ -46,6 +51,12 @@ def foo():
     #####################################
 
     driver.get(URL)
+    
+    print("")
+    print("--- SCRAPING... ---")
+    print("--- %s seconds ---" % (time.time() - start_time))
+    print("")
+
     element = driver.find_element_by_xpath('//*[@id="twotabsearchtextbox"]')
     element.send_keys(search_term)
     element.send_keys(Keys.ENTER)
@@ -78,7 +89,7 @@ def foo():
                 # rating = 
                 try:
                     prime_element = i.find_element_by_class_name("a-icon-prime")
-                    print(prime_element)
+                    #print(prime_element)
                     prime = True
                 except:
                     Exception()
@@ -101,6 +112,11 @@ def foo():
         if page == 0:
             break
         print(page)
+    
+    driver.quit()
+    print("")
+    print("--- DRIVER SUCCESS... STARTING SORTER ---")
+    print("--- %s seconds ---" % (time.time() - start_time))
 
     run = 0
     for product in products:
@@ -118,18 +134,16 @@ def foo():
                 chepest_product = product
             if product.discount > biggest_discount:
                 biggest_discount = product.discount
-                print(product.discount)
+                #print(product.discount)
                 best_deal_product = product
 
     with open('products.json', 'w') as json_file:
-        data = {}
-        data["Products"] = []
+        data = []
+        #data["Products"] = []
         for prod in products:
-            data["Products"].append(prod.serialize())
+            data.append(prod.serialize())
+            #data["Products"].append(prod.serialize())
         json.dump(data, json_file, sort_keys=True, indent=4)
-
-    print(json.dumps(chepest_product.serialize(), indent=4, sort_keys=True))
-    print(json.dumps(best_deal_product.serialize(), indent=4, sort_keys=True))
 
     ##############################
     options = webdriver.ChromeOptions()
@@ -140,6 +154,11 @@ def foo():
     driver.get(best_deal_product.link)
     driver.find_element_by_tag_name('body').send_keys(Keys.COMMAND + 't')
 
+    print("")
+    print("--- SESSION COMPLETE ---")
+    print("--- %s seconds ---" % (time.time() - start_time))
+    print("")
+    print("#####################################")
     return jsonify(data)
 
 if __name__ == '__main__':
